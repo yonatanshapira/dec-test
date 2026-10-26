@@ -154,7 +154,7 @@ button{font:inherit;color:inherit}
 .res p{margin:0 0 10px;max-width:70ch;line-height:1.75}
 .rl{display:grid;gap:6px;margin:0;padding:0;list-style:none}
 .rl li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font-size:14px}
-.rl li.cul{border-color:var(--beret);background:var(--bad-bg)}
+.rl li.sel{border-color:var(--beret);background:var(--surface-2)}
 .rl .th{width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--room-1)}
 .rl .th svg{width:100%;height:100%;display:block}
 .rl em{font:700 11px/1 var(--f-body);font-style:normal;padding:4px 8px;border:1px solid var(--beret);color:var(--beret);border-radius:99px;white-space:nowrap}
@@ -313,7 +313,7 @@ var CASE={
   paras:[
     "בשעות הקטנות של הלילה נגנב סכום כסף גדול מהכספת שבמשרד חנות YELLOW הפועלת בתחנת דלק. הכספת נפתחה בקוד תקין ולא נמצאו סימני פריצה. המשרד היה נעול, ורק מי שמחזיק מפתח או קוד יכול היה להיכנס אליו.",
     "התיעוד מראה דמות בווסט עבודה הפועלת בביטחון, כמי שמכיר את המקום ואת הקוד. אחרי הגניבה עזבה הדמות דרך הדלת האחורית והסתלקה ברכב.",
-    "שישה אנשים בעלי זיקה לתחנה הובאו לחקירה. עליך לעיין בתיקים, לחקור ולהכריע מי מהם עשה זאת. הסכום המדויק שנלקח לא נמסר לאיש מהם."
+    "שישה אנשים בעלי זיקה לתחנה הובאו לחקירה. עליך לעיין בתיקים, לחקור ולהכריע מי מהם עשה זאת. פרטים מסוימים מהזירה לא נמסרו לאיש מהם."
   ],
   tl:[
     ["00:50","עובד הניקיון מסיים לנקות את משרד החנות ועוזב."],
@@ -326,14 +326,9 @@ var CASE={
     "10 דקות לחקירה כולה. השעון מתחיל בלחיצה על הכפתור ואינו נעצר.",
     "לכל נחקר תיק אישי מפורט וארבע שאלות. התשובות נשמרות ביומן החקירה.",
     "אפשר לעבור בין נחקרים בלי הגבלה, ולהגיש מסקנה אחת בלבד.",
-    "הציון נקבע לפי נכונות המסקנה, מהירות ועומק החקירה."
-  ],
-  solution:"הקוד היה ידוע לשלושה בלבד: סגן המנהל דן ועובדי החנות יניב ונאור. דן היה בבית החולים עם בנו, ונאור תועד במצלמת החנות בעימות עם לקוח בזמן הגניבה. יניב יצא מוקדם ב-01:15 בטענה לכאבי בטן, אך נתוני האנטנה מציבים את הטלפון שלו ליד התחנה עד 02:05, ואביו מסר גרסה שונה משלו. ליניב יש מניע ברור: חובות הימורים שהולכים וגדלים וגובים שכבר הגיעו לעבודתו.",
-  slipYes:" בנוסף, כששאלת אותו מה ידוע לו הוא נקב בסכום המדויק, 38,500 ₪, שלא נמסר לאיש מהנחקרים.",
-  slipNo:" בחקירה, השאלה ״מה ידוע לך על מה שקרה?״ הייתה חושפת גם את הסכום המדויק, 38,500 ₪, שלא נמסר לאיש מהנחקרים."
+    "בסיום תקבל סיכום של החקירה: זמן, תיקים שנפתחו ושאלות שנשאלו."
+  ]
 };
-
-var CULPRIT="yaniv";
 
 var S=[
 {id:"yaniv",name:"יניב",age:36,role:"עובד חנות YELLOW",g:"m",
@@ -352,9 +347,8 @@ var S=[
   "הלכתי הביתה ב-01:15, הבטן שלי. הייתי לבד, במיטה. אחר כך אבא שלי התקשר ונפגשנו לאכול משהו.",
   "אני סוגר קופה בחנות, אז כן, אני יודע את הקוד. נאור גם, ודן. אבל זה לא אומר כלום.",
   "בואו לא נדבר על זה. כן, יש לי חובות, מישהו הגיע לעבודה פעמיים. סגרתי את זה עם המנהל, אני עוצר עם ההימורים. הכל בשליטה.",
-  "מה ששמעתי זה שהכספת נוקתה. שלושים ושמונה אלף וחמש מאות שקל. מי שעשה את זה ידע בדיוק כמה יש שם. אני רק אומר."
- ],
- why:"הוא היחיד שמתאים לכל הנתונים: מכיר את הקוד, יצא מוקדם, נתוני האנטנה סותרים את גרסתו, אביו מסר גרסה אחרת, ויש לו מניע של חובות הימורים גדלים. בחקירה נפלט לו הסכום המדויק, 38,500 ₪."},
+  "מה ששמעתי זה שהכספת נוקתה, ולא בסכום קטן. מי שעשה את זה הכין את זה היטב. אני רק אומר."
+ ]},
 
 {id:"naor",name:"נאור",age:26,role:"עובד חנות YELLOW",g:"m",
  look:{skin:"#B97B57",hair:"#14100E",style:"curly",beard:2,glasses:0,cap:"",shirt:"#2D2F38"},
@@ -373,8 +367,7 @@ var S=[
   "יש לי את הקוד, כן, כי אני סוגר קופה. אבל אני לא נכנס למשרד בלי סיבה. מה, כל מי שיודע קוד גונב?",
   "אני בעבודות מזדמנות, לא יודע מה אני רוצה לעשות. אבל אין לי חובות גדולים, אני מסתדר עם מה שיש.",
   "שמעתי שנגנב כסף. אני יודע מה אתם חושבים, בגלל הצלקת והחברים מהשכונה. אבל הייתי בחנות כל הזמן. ויניב הלך מוקדם עם כאבי בטן, כרגיל כשהוא צריך לצאת."
- ],
- why:"מכיר את הקוד ומתרועע עם עברייני רכוש, אך מצלמת החנות והעסקאות על שמו מציבים אותו בקופה בזמן הגניבה."},
+ ]},
 
 {id:"dan",name:"דן",age:44,role:"סגן מנהל התחנה",g:"m",
  look:{skin:"#E3B08A",hair:"#8E8C88",style:"short",beard:0,glasses:1,cap:"",shirt:"#44566B"},
@@ -393,8 +386,7 @@ var S=[
   "אני סגן מנהל התחנה, ויש לי את קוד הכספת. מכירים אותו רק שלושה: אני, יניב ונאור. זה לא סוד.",
   "המצב קשה. התרופות של הבן לא בסל, אנחנו משלמים הון. אני בלחץ, אני יודע שהתפקוד שלי ירד. אבל אני עובד כאן חמש עשרה שנה, לא הייתי עושה את זה למקום הזה.",
   "אני יודע רק שהכספת נמצאה פתוחה. מי שפתח אותה ידע את הקוד. תבדקו מי עוד ידע, ותבדקו איפה כל אחד היה."
- ],
- why:"מכיר את הקוד ויש לו לחץ כלכלי, אך יומן בית החולים והאחות מאמתים שהיה אצל בנו כל הלילה."},
+ ]},
 
 {id:"kobi",name:"קובי",age:null,role:"עובד הניקיון של התחנה",g:"m",
  look:{skin:"#C58E6A",hair:"#1C1612",style:"short",beard:2,glasses:0,cap:"",shirt:"#3C5A7A"},
@@ -413,8 +405,7 @@ var S=[
   "אני מנקה את המשרד בערב, יש לי מפתח לדלת. את הכספת לא נגעתי ולא ביקשתי את הקוד, זה לא התפקיד שלי.",
   "משכורת של עובד ניקיון, אין הרבה. יש לי ילדה והכל הולך עליה. אני מסתדר.",
   "שמעתי שמישהו פתח את הכספת עם קוד. אני יודע איך זה נראה, עם המעצרים שלי. אבל באותו לילה הייתי אצלכם בתחנה."
- ],
- why:"יש לו עבר של נהיגה בשכרות ומפתח למשרד, אך אין לו קוד, והוא היה במעצר בתחנת המשטרה מ-01:20."},
+ ]},
 
 {id:"yoni",name:"יוני",age:22,role:"מתדלק בתחנה",g:"m",
  look:{skin:"#E0AE8C",hair:"#2B2018",style:"short",beard:0,glasses:0,cap:"",shirt:"#5A6B4A"},
@@ -433,8 +424,7 @@ var S=[
   "אין לי שום קשר לכספת. אני מתדלק, אפילו לא נכנס למשרד אלא אם קוראים לי.",
   "אני בחובות, לא אסתיר. חברות סלולר, בנקים, המשכנתא של אמא. סיפרתי למנהל. אבל לא הייתי נוגע בכסף שלא שלי, אבא שלי היה מתבייש בי.",
   "ראיתי את יניב יוצא מוקדם באותו לילה, אמר שכואבת לו הבטן. לא ראיתי אותו חוזר. זה כל מה שאני יודע."
- ],
- why:"חובות כבדים ומצוקה כלכלית, אך אין לו קוד, ומצלמת המשאבות מתעדת אותו ברצף בזמן הגניבה."},
+ ]},
 
 {id:"ilan",name:"אילן",age:58,role:"קניין החנות",g:"m",
  look:{skin:"#E8BE9C",hair:"#B9BCC0",style:"short",beard:1,glasses:1,cap:"",shirt:"#4A4458"},
@@ -453,8 +443,7 @@ var S=[
   "אני קניין, מזמין סחורה לחנות. אין לי גישה לכספת, אפילו לא לקוד. אני כמעט לא נכנס למשרד.",
   "השארתי הכל לאשתי, אני לא רוצה לריב. אני גר בדירת חדר ומשלם שכירות. זה מה שמגיע לי. אבל אני לא רעב לכסף.",
   "אני יודע רק שנגנב כסף. אני מצטער בשביל הצוות. אני מעדיף לא להאשים אף אחד, אני יודע מה זה להיות מואשם."
- ],
- why:"מצוקה אישית וחוסר אליבי של ממש, אך אין לו גישה למשרד ואין לו קוד, והטלפון נקלט בדירתו כל הלילה."}
+ ]}
 ];
 
 var byId={};S.forEach(function(s){byId[s.id]=s});
@@ -517,9 +506,10 @@ function reset(){
 }
 
 /* ---------- intro / case ---------- */
-function articleHTML(){
+function articleHTML(withTl){
   var h='<span class="eyebrow">'+CASE.kicker+'</span><h1>'+CASE.title+'</h1><p class="byline">'+CASE.byline+'</p>';
   CASE.paras.forEach(function(p){h+='<p>'+p+'</p>'});
+  if(!withTl)return h;
   h+='<h2>ציר הזמן בזירה</h2><ol class="tl">';
   CASE.tl.forEach(function(t){h+='<li><time>'+t[0]+'</time><span>'+t[1]+'</span></li>'});
   return h+'</ol>';
@@ -626,7 +616,7 @@ $("#pick").addEventListener("click",function(e){
 $("#goBtn").onclick=function(){if(!picked)return;if(!armed){armed=true;updGo();return}submit(picked)};
 $("#backBtn").onclick=function(){$("#decOv").hidden=true};
 $("#decideBtn").onclick=function(){if(!finished)openDecide(false)};
-$("#caseBtn").onclick=function(){$("#caseBody").innerHTML='<div class="clip" style="border:0;padding:0">'+articleHTML()+'</div>';$("#caseOv").hidden=false};
+$("#caseBtn").onclick=function(){$("#caseBody").innerHTML='<div class="clip" style="border:0;padding:0">'+articleHTML(true)+'</div>';$("#caseOv").hidden=false};
 $("#caseClose").onclick=function(){$("#caseOv").hidden=true};
 document.addEventListener("keydown",function(e){
   if(e.key!=="Escape")return;
@@ -638,25 +628,16 @@ document.addEventListener("keydown",function(e){
 function totalAsked(){var n=0;S.forEach(function(s){n+=asked[s.id].size});return n}
 function submit(choice){
   finished=true;clearInterval(tickT);stopSay();
-  remAtEnd=Math.min(remaining(),TOTAL);
-  if(forced)remAtEnd=0;
+  remAtEnd=forced?0:Math.min(remaining(),TOTAL);
   topEl.classList.remove("low");
   $("#decOv").hidden=true;
-  var ok=choice===CULPRIT,qa=totalAsked(),score;
-  if(ok)score=60+Math.round(20*remAtEnd/TOTAL)+Math.round(20*Math.min(qa,10)/10);
-  else score=Math.min(35,Math.round(opened.size*3+Math.min(qa,12)));
-  var rating=ok?(score>=85?"חוקר מצטיין":score>=70?"חוקר טוב":"חוקר מתחיל"):"מסקנה שגויה";
-  var slip=asked[CULPRIT].has(3);
-  var used=TOTAL-remAtEnd;
-  var h='<div class="dlg res"><div class="dlg-h"><div class="verdict" style="width:100%"><div><span class="eyebrow">'+(ok?"התיק נסגר":"התיק נשאר פתוח")+'</span><h2>'+(ok?"זיהית את הגנב":"בחרת את האדם הלא נכון")+'</h2><p style="margin:8px 0 0;color:var(--ink-2)">דירוג: <b style="color:var(--ink)">'+rating+'</b></p></div><div class="score">'+score+'<small>/100</small></div></div></div><div class="dlg-b">';
-  var cul=byId[CULPRIT];
-  h+='<p>'+(ok?esc(cul.name)+" הוא הגנב. הבחירה שלך נשענת על חיבור של כמה נתונים שיחד מצביעים עליו בלבד.":"הגנב האמיתי הוא "+esc(cul.name)+". בחרת ב"+esc(byId[choice].name)+", ואחד או יותר מהנתונים בתיקו נשללים בבדיקה.")+'</p>';
-  h+='<div class="stats"><div class="stat"><small>זמן חקירה</small><b>'+fmt(used)+'</b></div><div class="stat"><small>תיקים שנפתחו</small><b>'+opened.size+'/'+S.length+'</b></div><div class="stat"><small>שאלות שנשאלו</small><b>'+qa+'/'+(S.length*4)+'</b></div><div class="stat"><small>תשובה מפלילה של הגנב</small><span>'+(slip?"התקבלה":"לא נשאלה")+'</span></div></div>';
-  h+='<h3>מה הסגיר אותו</h3><p>'+CASE.solution+(slip?CASE.slipYes:CASE.slipNo)+'</p>';
-  h+='<h3>למה האחרים נשללים</h3><ul class="rl">';
+  var qa=totalAsked(),used=TOTAL-remAtEnd,s=byId[choice];
+  var h='<div class="dlg res"><div class="dlg-h"><div><span class="eyebrow">המסקנה הוגשה</span><h2>החשוד שבחרת: '+esc(s.name)+'</h2><p style="margin:8px 0 0;color:var(--ink-2)">'+esc(s.role)+'</p></div></div><div class="dlg-b">';
+  h+='<div class="stats"><div class="stat"><small>זמן חקירה</small><b>'+fmt(used)+'</b></div><div class="stat"><small>תיקים שנפתחו</small><b>'+opened.size+'/'+S.length+'</b></div><div class="stat"><small>שאלות שנשאלו</small><b>'+qa+'/'+(S.length*4)+'</b></div></div>';
+  h+='<h3>סיכום החקירה</h3><ul class="rl">';
   order.forEach(function(id){
-    var s=byId[id],c=id===CULPRIT;
-    h+='<li'+(c?' class="cul"':'')+'><span class="th">'+avatar(s,true)+'</span><span class="why"><b>'+esc(s.name)+'.</b> '+esc(s.why)+'</span>'+(id===choice?'<em>הבחירה שלך</em>':(c?'<em>הגנב</em>':''))+'</li>';
+    var p=byId[id];
+    h+='<li'+(id===choice?' class="sel"':'')+'><span class="th">'+avatar(p,true)+'</span><span class="why"><b>'+esc(p.name)+'.</b> '+(opened.has(id)?'התיק נפתח':'התיק לא נפתח')+' · נשאלו '+asked[id].size+' מתוך 4 שאלות</span>'+(id===choice?'<em>הבחירה שלך</em>':'')+'</li>';
   });
   h+='</ul></div><div class="dlg-f"><button class="btn primary" id="againBtn">חקירה חוזרת</button></div></div>';
   var ov=$("#resOv");ov.innerHTML=h;ov.hidden=false;ov.scrollTop=0;
