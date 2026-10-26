@@ -1,0 +1,760 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>מבחן החוקר</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Concept: dark interrogation-room stage in the middle, the dossier on the left (RTL page), the roster on the right. Red-beret crimson is the single accent. */
+:root{
+  direction:rtl;
+  --bg:#E6E9ED; --bar:#F4F5F7; --surface:#F8F9FA; --surface-2:#ECEEF1; --ink:#14202B; --ink-2:#46525E; --line:#C8CED5;
+  --beret:#A11D33; --on-beret:#FFFFFF; --brass:#8A6D25; --olive:#4F5A36;
+  --ok:#1D6A44; --ok-bg:#DAEEE2; --warn:#85560A; --warn-bg:#F5E6C4; --bad:#A1301D; --bad-bg:#F6D9D1;
+  --room-0:#0E151C; --room-1:#1A252F; --room-2:#2B3945; --room-ink:#E9EDF0; --room-ink-2:#9DABB8; --lamp:#F0E3B8; --olive-l:#A9B27C; --brass-l:#CDAE5E;
+  --f-disp:"Frank Ruhl Libre","David Libre",Georgia,serif;
+  --f-body:"Heebo","Assistant",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1116; --bar:#111920; --surface:#151E26; --surface-2:#1B2630; --ink:#E5E9ED; --ink-2:#9AA7B3; --line:#293541;
+    --beret:#E0556B; --on-beret:#14090B; --brass:#D2B05A; --olive:#A9B27C;
+    --ok:#6FCB95; --ok-bg:#16301F; --warn:#E3B55A; --warn-bg:#33270E; --bad:#F08A76; --bad-bg:#3A1A14;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1116; --bar:#111920; --surface:#151E26; --surface-2:#1B2630; --ink:#E5E9ED; --ink-2:#9AA7B3; --line:#293541;
+  --beret:#E0556B; --on-beret:#14090B; --brass:#D2B05A; --olive:#A9B27C;
+  --ok:#6FCB95; --ok-bg:#16301F; --warn:#E3B55A; --warn-bg:#33270E; --bad:#F08A76; --bad-bg:#3A1A14;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--f-body);min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:70;background:var(--bar)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--beret);outline-offset:2px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar);border-bottom:1px solid var(--line)}
+.top .gut{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-inline-end:auto;min-width:0}
+.brand b{font:900 21px/1 var(--f-disp)}
+.brand small{display:block;font-size:12px;color:var(--ink-2);margin-top:3px}
+.clock{display:flex;align-items:baseline;gap:8px}
+.clock small{font-size:12px;color:var(--ink-2)}
+.clock b{font:600 28px/1 var(--f-mono);font-variant-numeric:tabular-nums;direction:ltr;display:inline-block}
+.top.low .clock b{color:var(--beret)}
+.top.low .clock b{animation:pulse 1s steps(2) infinite}
+.prog{height:3px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--beret);transform-origin:100% 50%}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:4px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--beret);border-color:var(--beret);color:var(--on-beret);font-weight:700}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.big{padding:13px 18px;font-size:16px;width:100%}
+
+/* intro */
+.intro{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;padding-block:28px 48px;align-items:start}
+.clip{background:var(--surface);border:1px solid var(--line);padding:30px 34px;min-width:0}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.12em;color:var(--beret)}
+.clip h1{font:900 clamp(28px,4.4vw,46px)/1.12 var(--f-disp);margin:10px 0 6px;text-wrap:balance}
+.byline{color:var(--ink-2);font-size:13px;margin:0 0 18px}
+.clip p{max-width:64ch;margin:0 0 14px;font-size:16.5px;line-height:1.75}
+.clip h2{font:700 13px/1 var(--f-body);letter-spacing:.1em;color:var(--ink-2);margin:26px 0 6px}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px dashed var(--line)}
+.tl time{font:600 15px/1.7 var(--f-mono);color:var(--beret);direction:ltr;text-align:right}
+.tl li span{font-size:15px}
+.rules{background:var(--surface);border:1px solid var(--line);padding:22px;display:grid;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px)}
+.rules h2{font:700 20px/1.2 var(--f-disp);margin:0}
+.rules ul{margin:0;padding-inline-start:18px;display:grid;gap:8px;color:var(--ink-2);font-size:14px}
+.rules li::marker{color:var(--beret)}
+
+/* workspace */
+.work{display:grid;grid-template-columns:250px minmax(0,1fr) 410px;gap:16px;padding-block:16px 40px;align-items:start}
+.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);max-height:calc(100vh - 100px);overflow:auto}
+.roster{display:grid;gap:6px;align-content:start}
+.rh{font:700 12px/1 var(--f-body);letter-spacing:.1em;color:var(--ink-2);margin:2px 2px 8px}
+.sus{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:start;background:var(--surface);border:1px solid var(--line);padding:8px 10px;cursor:pointer;border-radius:4px;min-width:0}
+.sus:hover{border-color:var(--ink-2)}
+.sus .th{width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--room-1);display:block}
+.sus .th svg{width:100%;height:100%;display:block}
+.sus .nm{min-width:0;display:grid;line-height:1.3}
+.sus .nm b{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sus .nm small{font-size:12px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sus .meta{display:grid;justify-items:end;gap:4px;font:500 11px/1 var(--f-mono);opacity:.85}
+.sus .dot{width:7px;height:7px;border-radius:50%;background:var(--olive);display:block}
+.sus[aria-current="true"]{background:var(--ink);color:var(--bar);border-color:var(--ink)}
+.sus[aria-current="true"] .dot{background:var(--olive-l)}
+
+.stage{position:relative;background:radial-gradient(120% 80% at 50% 0%,var(--room-2),var(--room-1) 55%,var(--room-0));color:var(--room-ink);border-radius:6px;overflow:hidden;min-width:0;scroll-margin-top:84px}
+.stage::before{content:"";position:absolute;inset:0 0 auto 0;height:72%;background:linear-gradient(to bottom,rgba(240,227,184,.2),rgba(240,227,184,0));clip-path:polygon(38% 0,62% 0,96% 100%,4% 100%);pointer-events:none}
+.st-top{position:relative;display:flex;justify-content:space-between;gap:12px;padding:12px 16px;font:500 12px/1 var(--f-mono);color:var(--room-ink-2);letter-spacing:.06em}
+.rec i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#E5484D;margin-inline-end:7px;animation:pulse 1.6s steps(2) infinite}
+.fig{position:relative;width:min(300px,64%);margin:0 auto}
+.fig svg{display:block;width:100%;height:auto}
+.stage .bob{animation:sway 7s ease-in-out infinite;transform-origin:50% 100%}
+.stage[data-talk="1"] .bob{animation:talk 1.2s ease-in-out infinite}
+.stage .eyes{transform-box:fill-box;transform-origin:center;animation:blink 5.5s infinite}
+.plate{position:relative;margin:-8px auto 0;width:min(440px,calc(100% - 32px));border:1px solid var(--brass-l);padding:10px 16px;text-align:center;background:rgba(14,21,28,.78)}
+.plate h2{font:700 30px/1.15 var(--f-disp);margin:0}
+.plate p{margin:2px 0 0;color:var(--room-ink-2);font-size:13.5px}
+.bubble{position:relative;margin:14px 16px 0;padding:14px 16px 16px;min-height:112px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:4px;cursor:pointer}
+.bubble .q{display:flex;align-items:center;gap:10px;font:500 12px/1.3 var(--f-mono);color:var(--lamp);min-height:16px;margin-bottom:6px}
+.wave{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+.wave i{width:3px;height:3px;background:var(--lamp);display:block}
+.bubble[data-talk="1"] .wave i{animation:bar .5s ease-in-out infinite alternate}
+.bubble[data-talk="1"] .wave i:nth-child(2){animation-delay:.12s}
+.bubble[data-talk="1"] .wave i:nth-child(3){animation-delay:.24s}
+.bubble[data-talk="1"] .wave i:nth-child(4){animation-delay:.06s}
+.bubble p{margin:0;font-size:17.5px;line-height:1.7;min-height:3.4em}
+.qs{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px 16px 14px}
+.qb{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:start;background:transparent;border:1px solid rgba(255,255,255,.24);color:var(--room-ink);padding:11px 13px;border-radius:4px;cursor:pointer;line-height:1.4}
+.qb:hover{background:rgba(255,255,255,.08)}
+.qb.done{border-color:var(--olive-l)}
+.qb.done::after{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--olive-l)}
+.log{position:relative;padding:0 16px 18px;display:grid;gap:8px}
+.log h3{font:700 12px/1 var(--f-body);letter-spacing:.1em;color:var(--room-ink-2);margin:6px 0 2px}
+.log .e{border-top:1px solid rgba(255,255,255,.12);padding-top:8px;font-size:14px;color:var(--room-ink-2)}
+.log .e b{display:block;color:var(--lamp);font-weight:500;font-size:12.5px;margin-bottom:2px}
+.log .none{font-size:13.5px;color:var(--room-ink-2);margin:0}
+
+.file{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.file-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+.file-h h2{font:700 23px/1.2 var(--f-disp);margin:0}
+.file-h .sub{font:500 12px/1.4 var(--f-mono);color:var(--ink-2);margin-top:4px}
+.stamp{font:600 11px/1 var(--f-mono);letter-spacing:.14em;color:var(--beret);border:1.5px solid var(--beret);padding:6px 8px;transform:rotate(-4deg);border-radius:2px;white-space:nowrap}
+.sec{padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:0}
+.sec h3{font:700 12px/1 var(--f-body);letter-spacing:.1em;color:var(--ink-2);margin:0 0 6px}
+.sec dl{margin:0}
+.row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;padding:6px 0;border-top:1px dotted var(--line)}
+.row:first-child{border-top:0}
+.row dt{color:var(--ink-2);font-size:13px}
+.row dd{margin:0;font-size:14px;line-height:1.55}
+.tag{display:inline-block;font:700 12px/1 var(--f-body);padding:4px 9px;border-radius:99px;margin-inline-end:7px;vertical-align:1px}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.warn{background:var(--warn-bg);color:var(--warn)}
+.tag.bad{background:var(--bad-bg);color:var(--bad)}
+.notes{margin:0;font-size:14px;line-height:1.7;color:var(--ink)}
+
+/* overlays */
+.ov{position:fixed;inset:0;z-index:80;background:rgba(7,11,15,.74);display:grid;place-items:start center;overflow:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.dlg{width:min(940px,100%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;margin-block:auto}
+.dlg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:20px 24px 14px;border-bottom:1px solid var(--line)}
+.dlg-h h2{font:900 clamp(24px,3.6vw,34px)/1.15 var(--f-disp);margin:6px 0 0;text-wrap:balance}
+.dlg-b{padding:18px 24px 24px}
+.dlg-f{display:flex;gap:10px;justify-content:flex-start;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--line);background:var(--surface-2)}
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.pk{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:center;text-align:start;background:var(--surface);border:1px solid var(--line);padding:9px 12px;border-radius:4px;cursor:pointer}
+.pk .th{width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--room-1)}
+.pk .th svg{width:100%;height:100%;display:block}
+.pk b{display:block;line-height:1.3}
+.pk small{color:var(--ink-2);font-size:12.5px}
+.pk[aria-pressed="true"]{border-color:var(--beret);box-shadow:0 0 0 2px var(--beret)}
+.verdict{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
+.score{font:600 54px/1 var(--f-mono);direction:ltr;color:var(--beret)}
+.score small{font-size:14px;color:var(--ink-2);margin-inline-start:4px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.stat{border:1px solid var(--line);padding:10px 12px;background:var(--surface-2)}
+.stat small{display:block;color:var(--ink-2);font-size:12.5px}
+.stat b{font:600 19px/1.4 var(--f-mono);direction:ltr;display:inline-block}
+.stat span{font-weight:700}
+.res h3{font:700 13px/1 var(--f-body);letter-spacing:.1em;color:var(--ink-2);margin:22px 0 8px}
+.res p{margin:0 0 10px;max-width:70ch;line-height:1.75}
+.rl{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.rl li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font-size:14px}
+.rl li.cul{border-color:var(--beret);background:var(--bad-bg)}
+.rl .th{width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--room-1)}
+.rl .th svg{width:100%;height:100%;display:block}
+.rl em{font:700 11px/1 var(--f-body);font-style:normal;padding:4px 8px;border:1px solid var(--beret);color:var(--beret);border-radius:99px;white-space:nowrap}
+.rl .why{color:var(--ink-2)}
+.rl .why b{color:var(--ink);font-weight:700}
+.forced{font-size:14px;color:var(--beret);font-weight:700;margin:0 0 12px}
+
+@keyframes pulse{50%{opacity:.35}}
+@keyframes sway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(2px) rotate(.5deg)}}
+@keyframes talk{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-2px) rotate(-.6deg)}70%{transform:translateY(1px) rotate(.6deg)}}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes bar{from{height:3px}to{height:12px}}
+@media (prefers-reduced-motion:reduce){
+  .stage .bob,.stage[data-talk="1"] .bob,.stage .eyes,.rec i,.top.low .clock b{animation:none}
+  .bubble[data-talk="1"] .wave i{animation:none;height:8px}
+}
+/* keep the layout compact on big screens */
+.top .gut,.intro,.work{max-width:1360px;margin-inline:auto;width:100%}
+.stage{align-self:start}
+.fig{width:min(280px,60%)}
+
+/* laptop / large tablet: narrower side columns */
+@media (max-width:1180px){.work{grid-template-columns:210px minmax(0,1fr) 340px}}
+
+/* tablet: roster becomes a strip on top, stage and dossier side by side */
+@media (max-width:980px){
+  .intro{grid-template-columns:minmax(0,1fr);max-width:720px}
+  .rules{position:static}
+  .work{grid-template-columns:minmax(0,1fr) 330px;gap:14px}
+  .work>aside:first-child{grid-column:1/-1;position:static;max-height:none;overflow:visible}
+  .rh{display:none}
+  .roster{grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+  .sticky.file{top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100vh - 92px)}
+  .qs{grid-template-columns:minmax(0,1fr)}
+  .fig{width:min(240px,62%)}
+  .bubble p{font-size:16.5px}
+}
+
+/* phone: one column, stage first, then roster strip, then dossier */
+@media (max-width:700px){
+  body{font-size:14.5px}
+  .top .gut{gap:8px;padding-block:8px}
+  .brand{flex:1 1 100%;order:0}
+  .brand b{font-size:18px}
+  .brand small{display:none}
+  .brand svg{width:28px;height:28px}
+  .clock{order:1;margin-inline-end:auto}
+  .clock b{font-size:24px}
+  .btn{padding:7px 11px;font-size:14px;order:2}
+  .work{grid-template-columns:minmax(0,1fr);padding-block:12px 32px;gap:12px}
+  .work>aside:first-child{order:0;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+  .roster{grid-auto-columns:176px}
+  .sus{grid-template-columns:36px minmax(0,1fr);padding:7px 9px;gap:8px}
+  .sus .th{width:36px;height:36px}
+  .sus .meta{display:none}
+  .stage{order:1;scroll-margin-top:96px}
+  .sticky.file{order:2;position:static;max-height:none;overflow:visible}
+  .fig{width:min(210px,58%)}
+  .plate{padding:8px 12px;margin-top:-6px}
+  .plate h2{font-size:24px}
+  .plate p{font-size:12.5px}
+  .bubble{margin:12px 12px 0;padding:12px 14px 14px;min-height:104px}
+  .bubble p{font-size:16px;line-height:1.65}
+  .qs{padding:10px 12px 12px}
+  .qb{padding:10px 12px;font-size:14px}
+  .log{padding:0 12px 16px}
+  .st-top{padding:10px 12px}
+  .row{grid-template-columns:88px minmax(0,1fr);gap:8px}
+  .file-h h2{font-size:21px}
+  .intro{padding-block:16px 32px}
+  .clip{padding:20px 16px}
+  .clip p{font-size:16px}
+  .tl li{grid-template-columns:48px minmax(0,1fr);gap:8px}
+  .verdict{grid-template-columns:minmax(0,1fr)}
+  .score{font-size:44px}
+  .dlg-h,.dlg-b,.dlg-f{padding-inline:14px}
+  .pick{grid-template-columns:minmax(0,1fr)}
+  .rl li{grid-template-columns:40px minmax(0,1fr)}
+  .rl em{grid-column:2;justify-self:start}
+  .dlg-f .btn{flex:1 1 100%}
+}
+</style>
+
+<header class="top" id="top">
+  <div class="gut">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="6" fill="var(--beret)"/><circle cx="15" cy="15" r="7" fill="none" stroke="var(--on-beret)" stroke-width="2.6"/><path d="M20.5 20.5L27 27" stroke="var(--on-beret)" stroke-width="3" stroke-linecap="round"/></svg>
+      <div><b>מבחן החוקר</b><small>תיק לדוגמה מס׳ 1</small></div>
+    </div>
+    <div class="clock" id="clockBox" hidden><small>זמן נותר</small><b id="clock">10:00</b></div>
+    <button class="btn" id="caseBtn" hidden>תיק המקרה</button>
+    <button class="btn primary" id="decideBtn" hidden>הגש מסקנה</button>
+  </div>
+  <div class="prog" id="progBox" hidden><i id="prog"></i></div>
+</header>
+
+<main class="intro gut" id="intro"></main>
+
+<main class="work gut" id="work" hidden>
+  <aside class="sticky" aria-label="רשימת נחקרים">
+    <div class="rh">עשרת הנחקרים</div>
+    <div class="roster" id="roster"></div>
+  </aside>
+  <section class="stage" id="stage" data-talk="0" aria-label="חדר החקירות">
+    <div class="st-top"><span class="rec"><i></i>תיעוד פעיל</span><span id="stTag">חדר חקירות 2</span></div>
+    <div class="fig" id="fig"></div>
+    <div class="plate"><h2 id="pName"></h2><p id="pRole"></p></div>
+    <div class="bubble" id="bubble" data-talk="0" title="לחיצה מדלגת על ההקלדה">
+      <div class="q"><span class="wave"><i></i><i></i><i></i><i></i></span><span id="bQ"></span></div>
+      <p id="bT"></p>
+    </div>
+    <div class="qs" id="qs"></div>
+    <div class="log" id="log"></div>
+  </section>
+  <aside class="sticky file" id="file" aria-label="תיק הנחקר"></aside>
+</main>
+
+<div class="ov" id="caseOv" hidden role="dialog" aria-modal="true" aria-label="תיק המקרה">
+  <div class="dlg">
+    <div class="dlg-h"><div><span class="eyebrow">תיק המקרה</span></div><button class="btn" id="caseClose">סגור</button></div>
+    <div class="dlg-b" id="caseBody"></div>
+  </div>
+</div>
+
+<div class="ov" id="decOv" hidden role="dialog" aria-modal="true" aria-label="הגשת מסקנה">
+  <div class="dlg">
+    <div class="dlg-h"><div><span class="eyebrow">הגשת מסקנה</span><h2>מי גנב מהכספת?</h2></div></div>
+    <div class="dlg-b">
+      <p class="forced" id="forcedMsg" hidden>הזמן נגמר. יש להכריע עכשיו.</p>
+      <div class="pick" id="pick"></div>
+    </div>
+    <div class="dlg-f">
+      <button class="btn primary" id="goBtn" disabled>בחר חשוד</button>
+      <button class="btn" id="backBtn">חזור לחקירה</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="resOv" hidden role="dialog" aria-modal="true" aria-label="תוצאה"></div>
+
+<script>
+(function(){
+"use strict";
+var TOTAL=600;
+var $=function(s){return document.querySelector(s)};
+var esc=function(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};
+var pad=function(n){return n<10?"0"+n:""+n};
+var fmt=function(r){return pad(Math.floor(r/60))+":"+pad(r%60)};
+
+var QS=["איפה היית בין 02:00 ל-02:30?","מה הקשר שלך לכספת ולמערכות התחנה?","מה מצבך הכלכלי?","מה ידוע לך על מה שקרה?"];
+
+var CASE={
+  kicker:"דסק הפשיעה · תיק לדוגמה מס׳ 1",
+  title:"הכספת נוקתה בתחנת הדלק ילו",
+  byline:"עשרה אנשים נחקרים, גנב אחד",
+  paras:[
+    "בשעות הקטנות של ליל שלישי נגנב סכום כסף גדול מהכספת שבמשרד תחנת הדלק ילו, הממוקמת בצומת בפאתי העיר. הכספת נפתחה בקוד תקין ולא נמצאו סימני פריצה. הקוד הוחלף רק כשבוע קודם לכן.",
+    "מהתיעוד עולה שהגנב הגיע בווסט צהוב ובכובע מצחייה, וגובהו מוערך בין 1.85 ל-1.90 מטר. הוא נע בקלילות ובמהירות והקיש את הקוד ביד שמאל. את דלת הצוות האחורית פתח בכרטיס עובד שדווח כאבוד שלושה ימים קודם, ונמלט מהמקום על קורקינט חשמלי.",
+    "עשרה אנשים בעלי זיקה לתחנה הובאו לחקירה. עליך לעיין בתיקים, לחקור ולהכריע מי מהם עשה זאת. פרטים מסוימים מהזירה, ובהם הסכום המדויק שנלקח, לא נמסרו לאיש מהם."
+  ],
+  tl:[
+    ["02:07","דלת הצוות האחורית נפתחת בכרטיס עובד. הכרטיס דווח כאבוד שלושה ימים קודם."],
+    ["02:11","מצלמת המשרד מתעדת דמות מקישה את קוד הכספת ביד שמאל. שניות אחר כך המצלמות מנותקות מרחוק, פעולה שדורשת הרשאת מנהל מערכת."],
+    ["02:14","אורות כיכר המשאבות כבים. הצוות במשמרת חשב שזו תקלת חשמל."],
+    ["02:19","מיקרופון חיצוני קולט קורקינט חשמלי מתרחק מהתחנה."]
+  ],
+  rules:[
+    "10 דקות לחקירה כולה. השעון מתחיל בלחיצה על הכפתור ואינו נעצר.",
+    "לכל נחקר תיק אישי מפורט וארבע שאלות. התשובות נשמרות ביומן החקירה.",
+    "אפשר לעבור בין נחקרים בלי הגבלה, ולהגיש מסקנה אחת בלבד.",
+    "הציון נקבע לפי נכונות המסקנה, מהירות ועומק החקירה."
+  ]
+};
+
+var CULPRIT="asaf";
+
+var S=[
+{id:"asaf",name:"אסף ברגמן",age:36,role:"טכנאי אבטחה, חברת מגן-נט",g:"m",
+ look:{skin:"#D9A47E",hair:"#2A211B",style:"short",beard:2,glasses:0,cap:"",shirt:"#35506B"},
+ intro:"בוקר טוב. אני מקווה שזה לא ייקח הרבה זמן, יש לי לקוחות היום.",
+ sec:[
+  ["פרטים אישיים",[["גיל","36"],["תעסוקה","טכנאי מערכות אבטחה בחברת מגן-נט, ספק התחזוקה של התחנה"],["ותק מול התחנה","שלוש שנים כספק קבוע. ביקור אחרון: לפני שלושה ימים (כיול מצלמות)"],["מגורים","רחובות, דירה שכורה"],["מצב משפחתי","גרוש, אב לילד בן 8 שנמצא במשמורת האם. משלם מזונות של 3,200 ₪ בחודש"],["שירות צבאי","חיל הקשר, טכנאי מערכות. משרת במילואים"]]],
+  ["מצב כללי",[["מצב כללי","טוב — מתפקד, מנומס ומוערך אצל לקוחות. אין תלונות אצל המעסיק","ok"],["בריאות","בריא, ללא טיפול קבוע"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — תיק נקי","ok"],["מצב כלכלי","בחובות — צו עיקול מההוצאה לפועל על חוב מזונות של כ-28,000 ₪. בחודש האחרון רכש שעון יוקרה בכ-9,000 ₪ במזומן","bad"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.88 מ׳, מבנה ספורטיבי"],["יד דומיננטית","שמאלי"],["אמצעי תחבורה","קורקינט חשמלי שחור לנסיעות בין לקוחות, ורכב שירות של החברה"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","כן — הוא שהתקין את המנעול החדש והגדיר את הקוד לפני שישה ימים"],["מערכת המצלמות","מנהל מערכת. הגדיר את חשבונות הניהול ויכול להתחבר מרחוק"],["משמרת באותו לילה","לא היה מתוכנן. אין לו נוכחות בתחנה בלילות"],["כרטיס עובד","אין לו כרטיס עובד. בביקורו האחרון נראה סמוך לאזור הארוניות"]]],
+  ["אליבי",[["טענה","ישן לבד בדירתו מ-23:30 עד 05:00"],["בדיקה","לא אומת — הטלפון הסלולרי היה כבוי בין 01:40 ל-03:30, אין עד ואין תיעוד נוכחות בדירה","bad"]]]
+ ],
+ notes:"שקט ומסודר. מגיע עם תיק כלים מסודר ובגדי עבודה נקיים. כשהוא לחוץ הוא נוטה לפרט יותר מהנדרש. מעשן כמעט קופסה ביום וממעט לשתות. את הקורקינט שדרג לאחרונה בכ-4,000 ₪. ביטל לאחרונה כמה מפגשים עם בנו בגלל עבודה.",
+ ans:[
+  "הייתי בבית, ישנתי. יש לי קימה מוקדמת. לא, אין מי שיאשר, אני גר לבד. והטלפון? הסוללה התרוקנה, זה קורה.",
+  "אני זה שהתקנתי את המנעול החדש והגדרתי את הקוד, כן. זו העבודה שלי. אני גם מנהל את חשבונות המצלמות, ככה זה בחוזה. אני אפילו לא זוכר את הקוד, אני מתקין עשרות בחודש.",
+  "מזונות, כולם יודעים. יש עיקול על המשכורת, זה לא סוד. אבל אני מסתדר. השעון? מתנה לעצמי אחרי שנה קשה. מה, זה אסור?",
+  "מה ששמעתי זה שהכספת נוקתה. שישים ואחד אלף שקל. כסף כזה לא נעלם סתם, מי שלקח הכין את זה היטב. אני רק אומר, זו לא עבודה של חובבן."
+ ],
+ why:"הוא היחיד שמתאים לכל הנתונים: ידע את הקוד, מנהל מערכת במצלמות (ניתוק מרחוק), שמאלי, גובה 1.88, קורקינט, ביקר בתחנה סמוך להיעלמות הכרטיס, ללא אליבי וטלפון כבוי. בחקירה נפלט לו הסכום המדויק, 61,000 ₪, שלא נמסר לאיש."},
+
+{id:"oren",name:"אורן כהן",age:34,role:"אחראי משמרת בתחנה",g:"m",
+ look:{skin:"#E3B08A",hair:"#4A3526",style:"short",beard:0,glasses:1,cap:"",shirt:"#5C6B4A"},
+ intro:"אני כאן. תשאלו מה שצריך, אני רוצה שזה ייסגר כבר.",
+ sec:[
+  ["פרטים אישיים",[["גיל","34"],["תעסוקה","אחראי משמרת ערב בתחנה"],["ותק בתחנה","שש שנים, שנתיים מהן כאחראי משמרת"],["מגורים","אשקלון, דירה בבעלות"],["מצב משפחתי","נשוי, אב לשניים (בני 5 ו-2)"],["שירות צבאי","חיל האספקה, שירות מלא. מילואים בתפקיד נהג"]]],
+  ["מצב כללי",[["מצב כללי","טוב — יציב, אחראי ואהוב על הצוות","ok"],["בריאות","בעיית גב תחתון קלה, ללא הגבלה בתנועה"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — תיק נקי","ok"],["מצב כלכלי","תקין — משכורת של כ-11,500 ₪, משכנתא סבירה וחיסכון קטן","ok"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.78 מ׳, מבנה בינוני-מלא"],["יד דומיננטית","ימני"],["אמצעי תחבורה","רכב משפחתי (מאזדה 3)"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","כן — קיבל אותו מהמנהלת לפני שבוע"],["מערכת המצלמות","משתמש צפייה בלבד. אינו יכול לשנות או לנתק"],["משמרת באותו לילה","ערב, עד 01:30. סגר קופה והחזיר את הכספת"],["כרטיס עובד","כרטיס אישי, נמצא ברשותו"]]],
+  ["אליבי",[["טענה","עזב את התחנה ב-01:30 והגיע הביתה בסביבות 01:50, שם נשאר עד הבוקר"],["בדיקה","אומת — מיקום הטלפון בבית מ-01:48 עד 06:10, יומן כניסה לבניין ב-01:47, ואשתו מאשרת","ok"]]]
+ ],
+ notes:"נרגש וכועס על עצם החשד. הוא שסגר את הכספת בסוף משמרתו ולכן ידע מה היה בה. מספר ברצון על כל נוהל סגירה, עם כל הפרטים. אוהד קבוע של קבוצת הכדורגל המקומית. לא ישן טוב מאז האירוע.",
+ ans:[
+  "עזבתי את התחנה ב-01:30 אחרי שסגרתי קופה. הגעתי הביתה וישנתי. אשתי מאשרת, והטלפון שלי היה בבית כל הלילה.",
+  "אני אחראי משמרת, אז כן, אני מכיר את הקוד. קיבלתי אותו מהמנהלת בשבוע שעבר. במערכת המצלמות יש לי צפייה בלבד, אני לא יכול לשנות או לכבות כלום.",
+  "אנחנו בסדר. משכנתא רגילה, שני ילדים, אין חובות. אם חשבתם שאני צריך כסף, אתם בכיוון הלא נכון.",
+  "שמעתי מהצוות שהכספת נמצאה פתוחה והמשרד מבולגן. אני סוגר אותה בכל משמרת, אז זה פוגע בי אישית. מי שעשה את זה ידע בדיוק מה הוא עושה."
+ ],
+ why:"מכיר את הקוד, אך ימני, גובה 1.78, צפייה בלבד במצלמות, ומיקום הטלפון ויומן הבניין מאמתים שהיה בבית."},
+
+{id:"michal",name:"מיכל אביטן",age:49,role:"מנהלת התחנה",g:"f",
+ look:{skin:"#EBC3A3",hair:"#8A5A3A",style:"long",beard:0,glasses:0,cap:"",shirt:"#7A3B4A"},
+ intro:"שלום. אני מקווה שנוכל להבין כבר מה קרה. אני מנהלת פה אחת-עשרה שנים.",
+ sec:[
+  ["פרטים אישיים",[["גיל","49"],["תעסוקה","מנהלת התחנה"],["ותק בתחנה","אחת-עשרה שנים"],["מגורים","באר שבע, דירה בבעלות עם משכנתא"],["מצב משפחתי","גרושה, אם לשניים בוגרים (24 ו-21)"],["שירות צבאי","חיל החינוך, שירות מלא"]]],
+  ["מצב כללי",[["מצב כללי","טוב — מקצועית ומדויקת, אך עייפה ועמוסה מאוד לאחרונה","ok"],["בריאות","יתר לחץ דם, מאוזן בתרופות"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — תיק נקי","ok"],["מצב כלכלי","מורכב — משכנתא ותמיכה בבת סטודנטית. אין חובות בהוצאה לפועל","warn"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.68 מ׳, מבנה רזה"],["יד דומיננטית","ימנית"],["אמצעי תחבורה","רכב פרטי (סקודה)"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","כן — היא שהחליפה אותו עם הטכנאי ומסרה אותו לאחראי המשמרת"],["מערכת המצלמות","משתמש צפייה בלבד. הניהול אצל חברת האבטחה"],["משמרת באותו לילה","לא. בחופשה של שלושה ימים"],["כרטיס עובד","כרטיס מנהלים, נמצא ברשותה"]]],
+  ["אליבי",[["טענה","בחופשה באילת, בחדר במלון"],["בדיקה","אומת — כניסה לחדר ב-01:20 (כרטיס חדר) והזמנת שירות חדרים מהחדר ב-02:10","ok"]]]
+ ],
+ notes:"מקצועית ומדויקת. מסרה שהספירה של הכספת נעשית אצל בעלי התחנה ולא אצלה, ולכן אינה יודעת מה הסכום המדויק שנלקח. לאחרונה ביקשה העלאת שכר והבקשה נדחתה. מציירת בזמנה הפנוי ומציעה להביא את העבודות שלה.",
+ ans:[
+  "הייתי באילת, בחופשה של שלושה ימים. עליתי לחדר ב-01:20 ובשתיים ועשרה הזמנתי שירות חדרים. אתם יכולים לבדוק במלון.",
+  "אני מנהלת את התחנה. את הקוד החדש קבעתי עם הטכנאי של חברת האבטחה לפני שבוע. במערכת המצלמות אני רק רואה, הניהול אצל הטכנאי.",
+  "אני לא מסתירה, יש לי משכנתא וילדה שלומדת. ביקשתי העלאה והיא נדחתה, וזה מרגיז. אבל לא הייתי נוגעת בכסף של התחנה. אין לי חובות בהוצאה לפועל.",
+  "אני לא יודעת כמה בדיוק נלקח, הספירה נעשית אצל הבעלים. מה שאני יודעת הוא שהכרטיס של עופר נעלם, ושאת הקוד החדש ידעו רק שלושה: אני, אורן והטכנאי של מגן-נט. זה מצמצם לא מעט."
+ ],
+ why:"מכירה את הקוד, אך באילת עם כרטיס חדר ושירות חדרים ב-02:10. ימנית, 1.68, וצפייה בלבד במצלמות."},
+
+{id:"yuval",name:"יובל מזרחי",age:27,role:"מתדלק וקופאי משמרות",g:"m",
+ look:{skin:"#C98E68",hair:"#1B1512",style:"curly",beard:2,glasses:0,cap:"",shirt:"#2E2E33"},
+ intro:"תכתבו מראש: אני לא לקחתי כלום, ובכל פעם שמשהו קורה מסתכלים עליי.",
+ sec:[
+  ["פרטים אישיים",[["גיל","27"],["תעסוקה","מתדלק וקופאי, בעיקר משמרות סוף שבוע"],["ותק בתחנה","שנתיים"],["מגורים","אשדוד, דירה שכורה עם שותף"],["מצב משפחתי","רווק"],["שירות צבאי","חיל האספקה, שירות מלא"]]],
+  ["מצב כללי",[["מצב כללי","רע — עצבני, ישן מעט, נוטה להתפרצויות. היה בעבר בטיפול בשל הימורים","bad"],["בריאות","חתך בכף יד ימין שנתפר לאחרונה"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","יש — הרשעה ב-2021 בהחזקת רכוש חשוד כגנוב, קנס וצו מבחן של שישה חודשים","bad"],["מצב כלכלי","בחובות — כ-45,000 ₪ לשוק האפור. בחודש האחרון הופעל עליו לחץ מצד מלווים","bad"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.72 מ׳, מבנה צנום"],["יד דומיננטית","שמאלי"],["אמצעי תחבורה","קורקינט חשמלי"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","לא — מעולם לא נמסר לו"],["מערכת המצלמות","אין הרשאה"],["משמרת באותו לילה","לא היה במשמרת"],["כרטיס עובד","כרטיסו ברשותו. נראה באזור הארוניות לפני כשלושה ימים"]]],
+  ["אליבי",[["טענה","היה במיון בשל חתך בכף היד"],["בדיקה","אומת — קבלה במיון ב-01:50, טיפול ותפירה, שחרור ב-04:30. מצלמות המיון מתעדות אותו","ok"]]]
+ ],
+ notes:"חשדן ומגיב בציניות. חוזר ואומר שהוא תמיד האשם. קיבל לאחרונה הודעת התראה ממלווה. אוהב מוזיקת טכנו ומנגן על גיטרה. מגיע לחקירה בכעס אך משתף פעולה.",
+ ans:[
+  "הייתי במיון. חתכתי את כף היד עם סכין מטבח. נכנסתי בערך באחת וחמישים ויצאתי אחרי ארבע. הם תפרו לי. תבדקו.",
+  "אין לי קשר לכספת. מעולם לא נתנו לי את הקוד, אני מתדלק וקופאי. לפעמים מחליף במשמרות סוף שבוע, זה הכל.",
+  "אני בחובות, לא אשקר. כארבעים וחמישה אלף, לאנשים לא נחמדים. לחצו עליי החודש. אבל זה לא אומר שאני גנב.",
+  "שמעתי שהכרטיס של עופר נעלם. אני עברתי ליד הארוניות לפני כמה ימים, כן, כי השארתי שם תיק. אני יודע איך זה נשמע. אבל בלילה ההוא הייתי בבית חולים."
+ ],
+ why:"שמאלי, קורקינט, חובות ועבר פלילי, אך גובהו 1.72, אין לו קוד, והיה במיון מ-01:50 עד 04:30."},
+
+{id:"ofer",name:"עופר דהן",age:22,role:"מתדלק משמרות לילה",g:"m",
+ look:{skin:"#B97B57",hair:"#14100E",style:"short",beard:0,glasses:0,cap:"",shirt:"#4A4F57"},
+ intro:"היי. אני מקווה שלא חושבים שזה אני, זה הכרטיס שלי שנעלם.",
+ sec:[
+  ["פרטים אישיים",[["גיל","22"],["תעסוקה","מתדלק במשמרות לילה"],["ותק בתחנה","שמונה חודשים"],["מגורים","קריית מלאכי, בבית ההורים"],["מצב משפחתי","רווק, בזוגיות"],["שירות צבאי","חיל ההנדסה, שוחרר לפני כשנה וחצי"]]],
+  ["מצב כללי",[["מצב כללי","טוב — אנרגטי ובריא, אך נראה מתוח ומבוהל מהחשד","ok"],["בריאות","תקין"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — תיק נקי","ok"],["מצב כלכלי","תקין — חוסך לטיול אחרי הצבא. ללא חובות","ok"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.91 מ׳, גבוה ורזה"],["יד דומיננטית","ימני"],["אמצעי תחבורה","קורקינט חשמלי אפור"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","לא"],["מערכת המצלמות","אין הרשאה"],["משמרת באותו לילה","כן — משמרת לילה במשאבות"],["כרטיס עובד","הכרטיס נעלם מהארונית לפני שלושה ימים ודווח למחרת. אותו כרטיס נרשם בדלת הצוות ב-02:07"]]],
+  ["אליבי",[["טענה","עמד במשאבות ושירת לקוחות לאורך כל הלילה"],["בדיקה","אומת — מצלמת המשאבות מציגה אותו ברצף בין 02:00 ל-02:30, כולל תדלוק של שלושה כלי רכב ותשלום מול הקופאית","ok"]]]
+ ],
+ notes:"נראה המום ומנסה להרגיע את עצמו. אחרי היעלמות הכרטיס חשב לקנות מנעול לארונית. נוהג להשאיר את הטלפון בארונית במהלך המשמרת. מתעניין בעיצוב תלת-ממד ורוצה ללמוד את התחום.",
+ ans:[
+  "אני במשמרת לילה במשאבות. הייתי בחוץ כל הזמן, שירתתי לקוחות. נועה בקופה ראתה אותי, והמצלמות בטח גם.",
+  "אין לי קוד, אין לי הרשאה למצלמות. אני מתדלק. אני אפילו לא נכנס למשרד בלי שמבקשים ממני.",
+  "המצב טוב. אני חוסך לטיול אחרי הצבא. אין לי חובות, ואני גר עם ההורים, אז ההוצאות קטנות.",
+  "הכרטיס נעלם לי מהארונית ודיווחתי למחרת. לא חשבתי שמישהו ישתמש בו. ראיתי שהאורות במשאבות כבו קצת אחרי שתיים ורבע, חשבתי שזו תקלת חשמל."
+ ],
+ why:"גבוה (1.91), קורקינט וכרטיסו נוצל, אך ימני ומתועד ברצף במשאבות בזמן הגניבה. הכרטיס נגנב ממנו."},
+
+{id:"noa",name:"נועה גולדשטיין",age:25,role:"קופאית משמרות לילה",g:"f",
+ look:{skin:"#E8BE9C",hair:"#2B1B14",style:"long",beard:0,glasses:0,cap:"",shirt:"#3F6A6A"},
+ intro:"שלום, אני נועה, הקופאית. הייתי במשמרת כל הלילה.",
+ sec:[
+  ["פרטים אישיים",[["גיל","25"],["תעסוקה","קופאית במשמרות לילה"],["ותק בתחנה","שנה וחצי"],["מגורים","נתיבות, דירה עם משכנתא משותפת"],["מצב משפחתי","נשואה טרייה, נישאה לפני ארבעה חודשים"],["שירות צבאי","שירות לאומי בבית חולים"]]],
+  ["מצב כללי",[["מצב כללי","טוב — שקטה ומסודרת, מעט לחוצה מהאירוע","ok"],["בריאות","תקין"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — תיק נקי","ok"],["מצב כלכלי","תקין — משכנתא חדשה עם הבעל, ללא חובות חריגים","ok"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.66 מ׳, מבנה רזה"],["יד דומיננטית","שמאלית"],["אמצעי תחבורה","רכב משותף עם הבעל"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","לא — מעבירה את הכסף לאחראי בסוף משמרת"],["מערכת המצלמות","אין הרשאה"],["משמרת באותו לילה","כן — קופה, משמרת לילה"],["כרטיס עובד","ברשותה"]]],
+  ["אליבי",[["טענה","הייתה בקופה כל הלילה"],["בדיקה","אומת — הקופה רשמה עסקאות על שמה ב-02:08, ב-02:12 וב-02:16, ומצלמת החנות מציגה אותה","ok"]]]
+ ],
+ notes:"מעשנת במרפסת האחורית פעם בשעתיים. זוכרת במדויק מי עבר בחנות ומתי. מוכנה לשתף פעולה בכל נושא ומציעה להביא את יומן המשמרת. מתכננת ללמוד סיעוד בשנה הבאה.",
+ ans:[
+  "הייתי בקופה, לא זזתי. יש עסקאות על שמי ב-02:08, ב-02:12 וב-02:16. עופר היה במשאבות ושילם אצלי באותו זמן.",
+  "אין לי קשר לכספת. אני מעבירה את הכסף לאחראי בסוף משמרת. את הקוד לא קיבלתי.",
+  "אנחנו בסדר. לקחנו משכנתא עם בעלי, אבל אנחנו מסתדרים. בלי חובות מיוחדים.",
+  "האורות במשאבות כבו קצת אחרי שתיים ורבע, ואחר כך שמעתי קורקינט מתרחק מאחור. זכור לי גם טכנאי שהיה כאן לפני כמה ימים והסתובב ליד הארוניות. לא זוכרת את שמו."
+ ],
+ why:"שמאלית, אך 1.66, אין לה קוד, ויש לה עסקאות בקופה ב-02:08, 02:12 ו-02:16."},
+
+{id:"victor",name:"ויקטור רוזנברג",age:54,role:"מאבטח לילה",g:"m",
+ look:{skin:"#E0AE8C",hair:"#B9BCC0",style:"short",beard:1,glasses:1,cap:"",shirt:"#2F3A4E"},
+ intro:"שאלו. אני יושב כאן הרבה, לא מתכנן לברוח, אין לי ברך לזה.",
+ sec:[
+  ["פרטים אישיים",[["גיל","54"],["תעסוקה","מאבטח התחנה בלילות"],["ותק בתחנה","ארבע שנים"],["מגורים","קריית גת, דירה בבעלות"],["מצב משפחתי","אלמן. אשתו נפטרה לפני שנתיים. בת בוגרת בחו״ל"],["שירות צבאי","משטרת ישראל 15 שנה, פרש לפני שמונה שנים בעקבות הליך משמעתי"]]],
+  ["מצב כללי",[["מצב כללי","רע — ניתוח החלפת מפרק ברך לפני חודש. כאבים, הליכה עם מקל ומרירות כלפי המעסיק","bad"],["בריאות","החלמה מניתוח, אסור לרוץ או לעלות מדרגות מהר"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — הליך משמעתי בלבד, ללא כתב אישום","ok"],["מצב כלכלי","סביר — קצבה ומשכורת, חוב קטן בכרטיס אשראי","warn"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.86 מ׳, מבנה כבד"],["יד דומיננטית","שמאלי"],["אמצעי תחבורה","רכב ישן (סובארו)"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","לא רשמית — ידע שהוחלף, אך לא נמסר לו"],["מערכת המצלמות","אין הרשאה"],["משמרת באותו לילה","כן — סיור ושמירה בחניה האחורית"],["כרטיס עובד","כרטיס מאבטח, ברשותו"]]],
+  ["אליבי",[["טענה","ישב ברכב השמירה בחניה האחורית"],["בדיקה","אומת חלקית — מצלמת החניה מציגה את הרכב ללא תנועה בין 01:55 ל-03:10, אך אין תיעוד של האדם עצמו","warn"]]]
+ ],
+ notes:"כועס שלא מיהרו להזעיק את הצוות. טוען שאין לו תפקיד בתוך המשרד. מתקשה לעמוד זמן ארוך ונעזר במקל גם בהליכה קצרה. קורא ספרי היסטוריה בהפסקות ויודע לספר על כל נוהל של המשטרה.",
+ ans:[
+  "ישבתי ברכב השמירה בחניה האחורית, לפי הנוהל. הרגל כואבת, אני לא מסתובב הרבה בלילה. אתם יכולים לראות שהרכב לא זז.",
+  "לא נתנו לי את הקוד, וטוב שכך. אני מאבטח, לא עובד משרד. על המצלמות אין לי שום שליטה.",
+  "קצבה ומשכורת, אני מסתדר. יש כרטיס אשראי שאני מנסה לסגור. לא חסר לי כסף.",
+  "ראיתי אור במסדרון האחורי ושמעתי דלת, אבל לא יכולתי לקום מהר, הברך. כשהגעתי כבר לא היה אף אחד. אני מצטער, אבל פה אני לא עוזר הרבה."
+ ],
+ why:"שמאלי וגובה 1.86, אך אחרי ניתוח ברך ועם מקל, בעוד שהדמות בתיעוד נעה במהירות. אין לו קוד ואין גישה למצלמות."},
+
+{id:"tamir",name:"תמיר ביטון",age:41,role:"נהג מכלית דלק, ספק",g:"m",
+ look:{skin:"#C58E6A",hair:"#1C1612",style:"short",beard:2,glasses:0,cap:"#38503F",shirt:"#5A5D62"},
+ intro:"בוקר טוב. עצרו אותי באמצע סבב, אז אם אפשר בקצרה.",
+ sec:[
+  ["פרטים אישיים",[["גיל","41"],["תעסוקה","נהג מכלית דלק, מספק לתחנה פעמיים בשבוע"],["ותק מול התחנה","תשע שנים כספק"],["מגורים","חדרה, דירה עם משכנתא"],["מצב משפחתי","נשוי, אב לשלושה"],["שירות צבאי","חיל התובלה, נהג"]]],
+  ["מצב כללי",[["מצב כללי","טוב — מתפקד אך עייף ממשמרות כפולות","ok"],["בריאות","יתר לחץ דם קל"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","יש — הרשעה ב-2017 בנהיגה בשכרות, שלילת רישיון לשישה חודשים","bad"],["מצב כלכלי","בחובות — משכנתא כבדה ושתי הלוואות. מתקשה לעמוד בתשלומים לאחרונה","bad"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.84 מ׳, מבנה רחב"],["יד דומיננטית","ימני"],["אמצעי תחבורה","משאית דלק. רכב פרטי לשימוש משפחתי"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","לא"],["מערכת המצלמות","אין הרשאה"],["משמרת באותו לילה","לא בתחנה. בנסיעת לילה"],["כרטיס עובד","כרטיס ספק לכניסה לשטח בלבד, לא כרטיס צוות"]]],
+  ["אליבי",[["טענה","היה בדרך מהמסוף בחיפה אל התחנות"],["בדיקה","אומת — GPS של המשאית ומשקל המסוף: במסוף בחיפה בין 01:40 ל-02:40, כולל רישום משקל ב-02:10","ok"]]]
+ ],
+ notes:"מדבר בחביבות ומתלונן על עומס. פעם נגנב לו פנקס שיקים מהרכב. אוהד של קבוצת כדורגל מחיפה ובעל כלב גדול. מבקש לסיים מהר כדי לא לאבד שעות נהיגה.",
+ ans:[
+  "הייתי עם המכלית, בדרך מהמסוף בחיפה. יש GPS, יש משקל במסוף. אפשר לראות הכל.",
+  "אני רק מספק. מעולם לא נכנסתי למשרד. אני חותם על תעודת משלוח בקופה וממשיך.",
+  "אני בחובות מהמשכנתא, שלושה ילדים. החודש קשה, אני מודה. אבל משמרות כפולות זה מה שיש.",
+  "שמעתי במסוף שהייתה גניבה. לא יודע פרטים. אם זה מישהו שעובד שם או קשור לתחנה, חבל. זה ברור שמישהו מבפנים."
+ ],
+ why:"חובות ועבר של נהיגה בשכרות, אך נתוני ה-GPS והמשקל מציבים אותו במסוף בחיפה בזמן הגניבה."},
+
+{id:"shira",name:"שירה לוי",age:29,role:"קופאית לשעבר",g:"f",
+ look:{skin:"#F0CDB0",hair:"#6B2D2A",style:"bun",beard:0,glasses:0,cap:"",shirt:"#2C3E58"},
+ intro:"הגעתי עם עורך דין, אני מקווה שאין בעיה. אני מוכנה לענות.",
+ sec:[
+  ["פרטים אישיים",[["גיל","29"],["תעסוקה","עובדת במפעל פלסטיק במשמרות לילה. בעבר קופאית בתחנה"],["ותק בתחנה","שלוש שנים, פוטרה לפני שלושה חודשים"],["מגורים","רמלה, דירה שכורה"],["מצב משפחתי","רווקה, בזוגיות"],["שירות צבאי","מש״קית בחיל הקשר"]]],
+  ["מצב כללי",[["מצב כללי","רע — כועסת. מנהלת תביעה נגד התחנה בבית הדין לעבודה בגין פיצויי פיטורים","bad"],["בריאות","תקין"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","אין — תלונת איומים נגדה לפני חודשיים נסגרה ללא כתב אישום","ok"],["מצב כלכלי","קשה — מובטלת חלקית, מתקיימת ממשכורת המפעל","warn"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.75 מ׳, מבנה בינוני"],["יד דומיננטית","ימנית"],["אמצעי תחבורה","רכב ישן (פיאט)"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","הכירה את הקוד הישן בלבד. הוחלף אחרי שפוטרה"],["מערכת המצלמות","הרשאת הצפייה בוטלה עם הפיטורים"],["משמרת באותו לילה","לא. במפעל"],["כרטיס עובד","הוחזר בעת הפיטורים"]]],
+  ["אליבי",[["טענה","הייתה במשמרת לילה במפעל"],["בדיקה","אומת — כניסה בטורניקט ב-22:00 ויומן הייצור מציג אותה בקו בין 02:00 ל-02:30","ok"]]]
+ ],
+ notes:"מגיעה מוכנה, מסודרת ועניינית אך עוינת. פרסמה לאחרונה פוסט נגד החברה ברשת. מדגישה שהיא רוצה את הפיצויים המגיעים לה ולא עניין אחר. עונה בקצרה ובדיוק.",
+ ans:[
+  "הייתי במפעל, משמרת לילה. יש טורניקט וכרטיס, אתם יכולים להשוות.",
+  "אני לא עובדת שם כבר שלושה חודשים. הכרתי את הקוד הישן והוא הוחלף. אין לי שום גישה למערכות.",
+  "המצב לא קל. אני מובטלת חלקית, יש תביעה בבית הדין לעבודה, ואני עובדת בלילות. אבל לא לקחתי כסף של אף אחד.",
+  "כשפיטרו אותי הייתי זועמת ואמרתי דברים על המנהלת. בגלל זה אני חשודה שוב. אבל אני לא רוצה אותם, אני רוצה את הפיצויים שמגיעים לי."
+ ],
+ why:"יש לה מניע ועימות עם התחנה, אך הקוד הוחלף אחרי שעזבה והטורניקט ויומן הייצור מאמתים שהייתה במפעל."},
+
+{id:"alon",name:"אלון חיים",age:45,role:"בעל המוסך הסמוך, לקוח קבוע",g:"m",
+ look:{skin:"#A8704D",hair:"#1B1512",style:"bald",beard:1,glasses:0,cap:"",shirt:"#5A3A2E"},
+ intro:"אני מכיר את הנוהל. תשאלו, אין לי מה להסתיר.",
+ sec:[
+  ["פרטים אישיים",[["גיל","45"],["תעסוקה","בעל מוסך ממול לתחנה, מעסיק שני עובדים"],["קשר לתחנה","לקוח קבוע, מתדלק שם מדי יום"],["מגורים","לוד, בית פרטי"],["מצב משפחתי","רווק"],["שירות צבאי","חיל השריון, שירות קרבי"]]],
+  ["מצב כללי",[["מצב כללי","רע — חם מזג, עסק במצוקה ושתייה בסופי שבוע","bad"],["בריאות","תקין"]]],
+  ["רקע פלילי וכלכלי",[["עבר פלילי","יש — הרשעה ב-2012 בפריצה וגניבה, ריצה של 14 חודשים. תיק תקיפה ישן נסגר","bad"],["מצב כלכלי","בחובות — המוסך על סף סגירה, חוב לספקים של כ-120,000 ₪","bad"]]],
+  ["מאפיינים פיזיים ותנועה",[["גובה ומבנה","1.89 מ׳, מבנה חזק"],["יד דומיננטית","ימני"],["אמצעי תחבורה","אופנוע כביש ורכב עבודה"]]],
+  ["קשר לתחנה ולאירוע",[["ידיעת הקוד","לא"],["מערכת המצלמות","אין הרשאה"],["משמרת באותו לילה","לא עובד בתחנה"],["כרטיס עובד","מעולם לא היה לו"]]],
+  ["אליבי",[["טענה","נסע ברכבו אחרי ערב אצל חברים"],["בדיקה","אומת — נעצר בבדיקת שוטר תנועה בכביש חוצה. דו״ח נרשם ב-02:09 והוקלט במצלמת הגוף","ok"]]]
+ ],
+ notes:"מגיע בביטחון ומכיר את הנוהל מניסיון. אומר שהוא יודע איך זה נראה. איש של שיחה, מספר על המוסך ועל הלקוחות. החלטה לשתף פעולה מלאה כדי לסגור את העניין.",
+ ans:[
+  "נסעתי מערב אצל חברים. בערך בשתיים ועשר עצר אותי שוטר תנועה בכביש חוצה. קיבלתי דו״ח, הכל מתועד, גם במצלמה שעל הגוף שלו.",
+  "אין לי קשר לתחנה חוץ מזה שאני מתדלק שם. המוסך שלי ממול. את הקוד לא קיבלתי ולא ביקשתי.",
+  "הצד העסקי קשה. יש חובות לספקים, בערך מאה ועשרים אלף. אבל אני נלחם עליו. לא אפרוץ כספות בגיל ארבעים וחמש.",
+  "שמעתי מהמאבטח שהייתה גניבה. אני יודע איך זה נראה, אדם עם עבר כמו שלי. אבל תבדקו את הדו״ח, בשעה ההיא הייתי במקום אחר."
+ ],
+ why:"עבר של פריצה, גובה 1.89 וחובות כבדים, אך ימני, ללא קוד ועם דו״ח שוטר תנועה מתועד ב-02:09."}
+];
+
+var byId={};S.forEach(function(s){byId[s.id]=s});
+
+/* ---------- avatar ---------- */
+function shade(hex,p){
+  var n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;
+  r=Math.round(r*(1-p));g=Math.round(g*(1-p));b=Math.round(b*(1-p));
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function avatar(s,mini){
+  var L=s.look,sk=L.skin,sh=shade(sk,.16),hr=L.hair,f=s.g==="f",out="",back="",front="";
+  var rx=f?58:62;
+  if(L.style==="long"){back='<path d="M84 140C64 214 76 280 114 296L186 296C224 280 236 214 216 140Z" fill="'+hr+'"/>';}
+  if(L.style==="short"){front='<path d="M88 138C84 84 112 64 150 64C188 64 216 84 212 138C206 112 190 98 150 96C110 98 94 112 88 138Z" fill="'+hr+'"/>';}
+  if(L.style==="long"){front='<path d="M86 146C80 86 112 64 150 64C188 64 220 86 214 146C206 112 184 92 150 94C116 92 94 112 86 146Z" fill="'+hr+'"/>';}
+  if(L.style==="bun"){front='<circle cx="150" cy="56" r="21" fill="'+hr+'"/><path d="M88 138C84 84 112 64 150 64C188 64 216 84 212 138C206 112 190 98 150 96C110 98 94 112 88 138Z" fill="'+hr+'"/>';}
+  if(L.style==="curly"){
+    [[100,94,22],[126,76,24],[154,70,24],[182,78,24],[206,96,22],[92,124,16],[208,124,16]].forEach(function(c){front+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="'+hr+'"/>';});
+  }
+  out+='<g class="bob">';
+  out+=back;
+  out+='<path d="M10 340C10 290 60 262 150 258C240 262 290 290 290 340Z" fill="'+L.shirt+'"/>';
+  out+='<path d="M122 262C128 282 172 282 178 262L170 258C164 270 136 270 130 258Z" fill="'+shade(L.shirt,.28)+'"/>';
+  out+='<rect x="122" y="196" width="56" height="70" rx="20" fill="'+sh+'"/>';
+  out+='<ellipse cx="'+(150-rx)+'" cy="152" rx="10" ry="16" fill="'+sk+'"/><ellipse cx="'+(150+rx)+'" cy="152" rx="10" ry="16" fill="'+sk+'"/>';
+  out+='<ellipse cx="150" cy="148" rx="'+rx+'" ry="76" fill="'+sk+'"/>';
+  if(L.beard===1){out+='<path d="M88 164C88 238 118 264 150 264C182 264 212 238 212 164C206 202 188 222 150 222C112 222 94 202 88 164Z" fill="'+hr+'"/>';}
+  if(L.beard===2){out+='<path d="M88 164C88 238 118 264 150 264C182 264 212 238 212 164C206 202 188 222 150 222C112 222 94 202 88 164Z" fill="'+hr+'" opacity=".34"/>';}
+  out+=front;
+  if(L.cap){out+='<path d="M86 126C86 78 114 58 150 58C186 58 214 78 214 126Z" fill="'+L.cap+'"/><path d="M80 124C120 136 180 136 228 120C226 136 190 148 150 146C116 144 90 138 80 124Z" fill="'+shade(L.cap,.3)+'"/>';}
+  var brow=(L.style==="bald"||L.beard===1)&&!f?hr:(L.style==="long"||L.style==="bun"?hr:hr);
+  out+='<path d="M108 138Q124 130 140 138M160 138Q176 130 192 138" fill="none" stroke="'+brow+'" stroke-width="5" stroke-linecap="round"/>';
+  out+='<g class="eyes"><ellipse cx="124" cy="154" rx="11" ry="8" fill="#F7F4EF"/><ellipse cx="176" cy="154" rx="11" ry="8" fill="#F7F4EF"/><circle cx="125" cy="155" r="4.6" fill="#1B1714"/><circle cx="177" cy="155" r="4.6" fill="#1B1714"/></g>';
+  if(L.glasses){out+='<g fill="rgba(255,255,255,.1)" stroke="#1C1E22" stroke-width="3"><rect x="100" y="138" width="46" height="32" rx="11"/><rect x="154" y="138" width="46" height="32" rx="11"/><path d="M146 150H154" fill="none"/></g>';}
+  out+='<path d="M150 158C146 174 140 184 148 190C152 192 158 192 162 188" fill="none" stroke="'+sh+'" stroke-width="4" stroke-linecap="round"/>';
+  if(L.beard===1){out+='<path d="M124 200C138 190 162 190 176 200C164 206 136 206 124 200Z" fill="'+hr+'"/>';}
+  out+='<ellipse class="mouth" cx="150" cy="210" rx="16" ry="2" fill="#4A1C1C" stroke="'+(f?"#B5535B":"#7A3B35")+'" stroke-width="3"/>';
+  out+='</g>';
+  var vb=mini?"58 44 184 200":"0 0 300 340";
+  return '<svg viewBox="'+vb+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(s.name)+'" preserveAspectRatio="xMidYMid slice">'+out+'</svg>';
+}
+
+/* ---------- state ---------- */
+var order,cur,opened,asked,logs,started,finished,endTs,tickT,remAtEnd,forced;
+var roster=$("#roster"),stage=$("#stage"),fig=$("#fig"),bubble=$("#bubble"),bQ=$("#bQ"),bT=$("#bT"),qsEl=$("#qs"),logEl=$("#log"),fileEl=$("#file");
+var topEl=$("#top"),clock=$("#clock"),prog=$("#prog");
+
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a}
+function reset(){
+  stopSay();clearInterval(tickT);
+  order=shuffle(S.map(function(s){return s.id}));
+  cur=null;opened=new Set();asked={};logs={};started=false;finished=false;forced=false;remAtEnd=0;
+  S.forEach(function(s){asked[s.id]=new Set();logs[s.id]=[]});
+  $("#work").hidden=true;$("#intro").hidden=false;
+  ["clockBox","caseBtn","decideBtn","progBox"].forEach(function(i){$("#"+i).hidden=true});
+  ["caseOv","decOv","resOv"].forEach(function(i){$("#"+i).hidden=true});
+  topEl.classList.remove("low");clock.textContent=fmt(TOTAL);prog.style.transform="scaleX(1)";
+  renderIntro();window.scrollTo(0,0);
+}
+
+/* ---------- intro / case ---------- */
+function articleHTML(){
+  var h='<span class="eyebrow">'+CASE.kicker+'</span><h1>'+CASE.title+'</h1><p class="byline">'+CASE.byline+'</p>';
+  CASE.paras.forEach(function(p){h+='<p>'+p+'</p>'});
+  h+='<h2>ציר הזמן בזירה</h2><ol class="tl">';
+  CASE.tl.forEach(function(t){h+='<li><time>'+t[0]+'</time><span>'+t[1]+'</span></li>'});
+  return h+'</ol>';
+}
+function renderIntro(){
+  $("#intro").innerHTML='<article class="clip">'+articleHTML()+'</article><aside class="rules"><h2>כללי החקירה</h2><ul>'+CASE.rules.map(function(r){return '<li>'+r+'</li>'}).join("")+'</ul><button class="btn primary big" id="startBtn">פתח חקירה והפעל שעון</button></aside>';
+  $("#startBtn").onclick=start;
+}
+function start(){
+  started=true;$("#intro").hidden=true;$("#work").hidden=false;
+  ["clockBox","caseBtn","decideBtn","progBox"].forEach(function(i){$("#"+i).hidden=false});
+  renderRoster();
+  endTs=Date.now()+TOTAL*1000;tickT=setInterval(tick,250);tick();
+  select(order[0],true);window.scrollTo(0,0);
+}
+function remaining(){return Math.max(0,Math.ceil((endTs-Date.now())/1000))}
+function tick(){
+  var r=remaining();clock.textContent=fmt(r);prog.style.transform="scaleX("+(r/TOTAL)+")";
+  topEl.classList.toggle("low",r<=120&&r>0);
+  if(r<=0){clearInterval(tickT);timeUp();}
+}
+function timeUp(){forced=true;stopSay();$("#caseOv").hidden=true;openDecide(true)}
+
+/* ---------- roster / select ---------- */
+function renderRoster(){
+  roster.innerHTML=order.map(function(id){
+    var s=byId[id],q=asked[id].size;
+    return '<button class="sus" data-id="'+id+'" aria-current="'+(cur===id)+'"><span class="th">'+avatar(s,true)+'</span><span class="nm"><b>'+esc(s.name)+'</b><small>'+esc(s.role)+'</small></span><span class="meta">'+(opened.has(id)?'<i class="dot"></i>':'')+'<em style="font-style:normal">'+q+'/4</em></span></button>';
+  }).join("");
+}
+roster.addEventListener("click",function(e){var b=e.target.closest(".sus");if(b&&!finished)select(b.dataset.id,false)});
+
+function select(id,silent){
+  var s=byId[id];cur=id;opened.add(id);stopSay();
+  fig.innerHTML=avatar(s,false);
+  $("#pName").textContent=s.name;$("#pRole").textContent=s.role+" · גיל "+s.age;
+  $("#stTag").textContent="חדר חקירות 2 · נחקר מס׳ "+pad(order.indexOf(id)+1);
+  renderQs();renderLog();renderFile(s);renderRoster();
+  say(s.intro,"פתיחת חקירה");
+  if(!silent&&window.matchMedia("(max-width:860px)").matches){stage.scrollIntoView({block:"start",behavior:"smooth"});}
+}
+function renderQs(){
+  qsEl.innerHTML=QS.map(function(q,i){return '<button class="qb'+(asked[cur].has(i)?' done':'')+'" data-q="'+i+'">'+esc(q)+'</button>'}).join("");
+}
+qsEl.addEventListener("click",function(e){
+  var b=e.target.closest(".qb");if(!b||finished)return;
+  var i=+b.dataset.q,s=byId[cur];
+  if(!asked[cur].has(i)){asked[cur].add(i);logs[cur].push(i);}
+  renderQs();renderLog();renderRoster();say(s.ans[i],QS[i]);
+});
+function renderLog(){
+  var s=byId[cur],l=logs[cur];
+  if(!l.length){logEl.innerHTML='<h3>יומן חקירה</h3><p class="none">עוד לא נשאלו שאלות. בחר שאלה כדי לשמוע את התשובה.</p>';return}
+  logEl.innerHTML='<h3>יומן חקירה</h3>'+l.slice().reverse().map(function(i){return '<div class="e"><b>'+esc(QS[i])+'</b>'+esc(s.ans[i])+'</div>'}).join("");
+}
+function renderFile(s){
+  var h='<div class="file-h"><div><h2>'+esc(s.name)+'</h2><div class="sub">נחקר מס׳ '+pad(order.indexOf(s.id)+1)+' · תיק אישי</div></div><div class="stamp">סודי</div></div>';
+  s.sec.forEach(function(sec){
+    h+='<section class="sec"><h3>'+sec[0]+'</h3><dl>';
+    sec[1].forEach(function(r){
+      var v=r[1],val;
+      if(r[2]){var i=v.indexOf(" — ");var head=i>0?v.slice(0,i):v,rest=i>0?v.slice(i+3):"";val='<span class="tag '+r[2]+'">'+esc(head)+'</span>'+esc(rest);}
+      else val=esc(v);
+      h+='<div class="row"><dt>'+r[0]+'</dt><dd>'+val+'</dd></div>';
+    });
+    h+='</dl></section>';
+  });
+  h+='<section class="sec"><h3>הערות החוקר</h3><p class="notes">'+esc(s.notes)+'</p></section>';
+  fileEl.innerHTML=h;fileEl.scrollTop=0;
+}
+
+/* ---------- speech + mouth ---------- */
+var mouthT=null,typeT=null,fullText="";
+function setMouth(v){var m=fig.querySelector(".mouth");if(m)m.setAttribute("ry",(2+v*11).toFixed(1))}
+function stopSay(){clearInterval(mouthT);clearInterval(typeT);mouthT=typeT=null;if(fig&&fig.firstChild)setMouth(0);stage.dataset.talk="0";bubble.dataset.talk="0"}
+function say(text,label){
+  stopSay();fullText=text;bQ.textContent=label||"";bT.textContent="";
+  stage.dataset.talk="1";bubble.dataset.talk="1";
+  var i=0;
+  typeT=setInterval(function(){i++;bT.textContent=text.slice(0,i);if(i>=text.length)stopSay()},24);
+  mouthT=setInterval(function(){setMouth(Math.random()*(.35+Math.random()*.65))},90);
+}
+bubble.addEventListener("click",function(){if(typeT){stopSay();bT.textContent=fullText}});
+
+/* ---------- decision ---------- */
+var picked=null,armed=false;
+function openDecide(isForced){
+  picked=cur;armed=false;
+  $("#forcedMsg").hidden=!isForced;$("#backBtn").hidden=!!isForced;
+  $("#pick").innerHTML=order.map(function(id){var s=byId[id];return '<button class="pk" data-id="'+id+'" aria-pressed="'+(picked===id)+'"><span class="th">'+avatar(s,true)+'</span><span><b>'+esc(s.name)+'</b><small>'+esc(s.role)+'</small></span></button>'}).join("");
+  updGo();$("#decOv").hidden=false;
+}
+function updGo(){
+  var g=$("#goBtn");
+  if(!picked){g.disabled=true;g.textContent="בחר חשוד";return}
+  g.disabled=false;g.textContent=armed?"בטוח? לחץ שוב לאישור סופי":"הגש מסקנה: "+byId[picked].name;
+}
+$("#pick").addEventListener("click",function(e){
+  var b=e.target.closest(".pk");if(!b)return;
+  picked=b.dataset.id;armed=false;
+  document.querySelectorAll(".pk").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.id===picked)});
+  updGo();
+});
+$("#goBtn").onclick=function(){if(!picked)return;if(!armed){armed=true;updGo();return}submit(picked)};
+$("#backBtn").onclick=function(){$("#decOv").hidden=true};
+$("#decideBtn").onclick=function(){if(!finished)openDecide(false)};
+$("#caseBtn").onclick=function(){$("#caseBody").innerHTML='<div class="clip" style="border:0;padding:0">'+articleHTML()+'</div>';$("#caseOv").hidden=false};
+$("#caseClose").onclick=function(){$("#caseOv").hidden=true};
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape")return;
+  if(!$("#caseOv").hidden)$("#caseOv").hidden=true;
+  else if(!$("#decOv").hidden&&!forced)$("#decOv").hidden=true;
+});
+
+/* ---------- result ---------- */
+function totalAsked(){var n=0;S.forEach(function(s){n+=asked[s.id].size});return n}
+function submit(choice){
+  finished=true;clearInterval(tickT);stopSay();
+  remAtEnd=Math.min(remaining(),TOTAL);
+  if(forced)remAtEnd=0;
+  topEl.classList.remove("low");
+  $("#decOv").hidden=true;
+  var ok=choice===CULPRIT,qa=totalAsked(),score;
+  if(ok)score=60+Math.round(20*remAtEnd/TOTAL)+Math.round(20*Math.min(qa,12)/12);
+  else score=Math.min(35,Math.round(opened.size*2+Math.min(qa,15)));
+  var rating=ok?(score>=85?"חוקר מצטיין":score>=70?"חוקר טוב":"חוקר מתחיל"):"מסקנה שגויה";
+  var slip=asked[CULPRIT].has(3);
+  var used=TOTAL-remAtEnd;
+  var h='<div class="dlg res"><div class="dlg-h"><div class="verdict" style="width:100%"><div><span class="eyebrow">'+(ok?"התיק נסגר":"התיק נשאר פתוח")+'</span><h2>'+(ok?"זיהית את הגנב":"בחרת את האדם הלא נכון")+'</h2><p style="margin:8px 0 0;color:var(--ink-2)">דירוג: <b style="color:var(--ink)">'+rating+'</b></p></div><div class="score">'+score+'<small>/100</small></div></div></div><div class="dlg-b">';
+  h+='<p>'+(ok?"אסף ברגמן, טכנאי האבטחה, הוא הגנב. הבחירה שלך נשענת על חיבור של כמה נתונים שיחד מצביעים עליו בלבד.":"הגנב האמיתי הוא אסף ברגמן, טכנאי האבטחה. בחרת ב"+esc(byId[choice].name)+", שאחד או יותר מהנתונים בתיק שלו נשללים בבדיקה.")+'</p>';
+  h+='<div class="stats"><div class="stat"><small>זמן חקירה</small><b>'+fmt(used)+'</b></div><div class="stat"><small>תיקים שנפתחו</small><b>'+opened.size+'/10</b></div><div class="stat"><small>שאלות שנשאלו</small><b>'+qa+'/40</b></div><div class="stat"><small>תשובה מפלילה של הגנב</small><span>'+(slip?"התקבלה":"לא נשאלה")+'</span></div></div>';
+  h+='<h3>מה הסגיר אותו</h3><p>הקוד הוחלף לפני שישה ימים ונמסר רק למנהלת, לאחראי המשמרת ולטכנאי. ניתוק המצלמות מרחוק דרש הרשאת מנהל מערכת, ואותה יש רק לטכנאי. הוא שמאלי, גובהו 1.88, נוסע בקורקינט חשמלי, ביקר בתחנה סמוך להיעלמות הכרטיס, טלפונו כבוי בשעות האירוע ואין לו אליבי.';
+  h+=slip?' בנוסף, כששאלת אותו מה ידוע לו הוא נקב בסכום המדויק, 61,000 ₪, שלא נמסר לאיש מהנחקרים.</p>':' בחקירה, השאלה &quot;מה ידוע לך על מה שקרה?&quot; הייתה חושפת גם את הסכום המדויק, 61,000 ₪, שלא נמסר לאיש מהנחקרים.</p>';
+  h+='<h3>למה האחרים נשללים</h3><ul class="rl">';
+  order.forEach(function(id){
+    var s=byId[id],c=id===CULPRIT;
+    h+='<li'+(c?' class="cul"':'')+'><span class="th">'+avatar(s,true)+'</span><span class="why"><b>'+esc(s.name)+'.</b> '+esc(s.why)+'</span>'+(id===choice?'<em>הבחירה שלך</em>':(c?'<em>הגנב</em>':''))+'</li>';
+  });
+  h+='</ul></div><div class="dlg-f"><button class="btn primary" id="againBtn">חקירה חוזרת</button></div></div>';
+  var ov=$("#resOv");ov.innerHTML=h;ov.hidden=false;ov.scrollTop=0;
+  $("#againBtn").onclick=reset;
+}
+
+reset();
+})();
+</script>
+
+</body></html>
